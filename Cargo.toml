@@ -3,7 +3,15 @@ name = "brainview"
 version = "0.1.0"
 authors = ["Tim Schäfer <ts+code@rcmd.org>"]
 edition = "2018"
+repository = "https://github.com/dfsp-spirit/brainview-rs"
+homepage = "https://github.com/dfsp-spirit/brainview-rs"
+keywords = ["neuroimaging", "brain", "MRI", "viewer", "neuroscience", "freesurfer", "visualization", "mesh"]
+categories = ["science", "visualization"]
+description = "A simple brain mesh viewer. The focus is on surface-based brain morphometry data and FreeSurfer file formats."
+license = "MIT OR Apache-2.0"
+exclude = ["/examples", "/resources", ".gitignore"]
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+three-d = "0.6"
+neuroformats = "0.1.0"
