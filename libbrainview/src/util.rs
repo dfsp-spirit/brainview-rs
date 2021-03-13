@@ -27,6 +27,6 @@ pub fn scale_to_01(data: Vec<f32>) -> Vec<f32> {
     let mm = vec32minmax(data);
     let dmin = mm[0];
     let dmax = mm[1];
-    println!("TOD: implement scale_to_01");
+    println!("TODO: implement scale_to_01");
     scaled
 }

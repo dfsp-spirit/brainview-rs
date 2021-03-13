@@ -2,7 +2,7 @@
 
 use three_d::*;
 use neuroformats::{read_surf, read_curv};
-use libbrainview::{apply_colormap, colors_as_u8_4,a22vec, f32tou32, vec32minmax, scale_to_01};
+use libbrainview::{apply_colormap, colors_as_u8_4, f32tou32, vec32minmax, scale_to_01};
 
 
 fn main() {
@@ -35,14 +35,14 @@ fn main() {
     //let rh_brain_colors: Vec<u8> = vec![255; rh_white.mesh.vertices.len() * 4];
 
     let lh_cpu_mesh = CPUMesh {
-        positions : a22vec(lh_white.mesh.vertices), colors : Some(lh_brain_colors), indices : Some(f32tou32
-        (a22vec(lh_white.mesh.faces))), ..Default::default()
+        positions : lh_white.mesh.vertices, colors : Some(lh_brain_colors), indices : Some(f32tou32
+        (lh_white.mesh.faces)), ..Default::default()
     };
     let lh_mesh = Mesh::new(&context, &lh_cpu_mesh).unwrap();
 
     let rh_cpu_mesh = CPUMesh {
-        positions : a22vec(rh_white.mesh.vertices), colors : Some(rh_brain_colors), indices : Some(f32tou32
-        (a22vec(rh_white.mesh.faces))), ..Default::default()
+        positions : rh_white.mesh.vertices, colors : Some(rh_brain_colors), indices : Some(f32tou32
+        (rh_white.mesh.faces)), ..Default::default()
     };
     let rh_mesh = Mesh::new(&context, &rh_cpu_mesh).unwrap();
 
