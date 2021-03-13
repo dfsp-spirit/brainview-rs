@@ -54,7 +54,7 @@ version = "0.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f0e60b75072ecd4168020818c0107f2857bb6c4e64252d8d3983f6263b40a5c3"
 dependencies = [
- "num-traits 0.2.14",
+ "num-traits",
 ]
 
 [[package]]
@@ -63,7 +63,7 @@ version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3f2a05fd1bd10b2527e20a2cd32d8873d115b8b39fe219ee25f42a8aca6ba278"
 dependencies = [
- "num-traits 0.2.14",
+ "num-traits",
 ]
 
 [[package]]
@@ -194,7 +194,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "283944cdecc44bf0b8dd010ec9af888d3b4f142844fdbe026c20ef68148d6fe7"
 dependencies = [
  "approx 0.3.2",
- "num-traits 0.2.14",
+ "num-traits",
  "rand",
 ]
 
@@ -665,7 +665,7 @@ dependencies = [
  "jpeg-decoder",
  "num-iter",
  "num-rational",
- "num-traits 0.2.14",
+ "num-traits",
  "png",
  "scoped_threadpool",
  "tiff",
@@ -687,15 +687,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b2b3ea6ff95e175473f8ffe6a7eb7c00d054240321b84c57051175fe3c1e075e"
 dependencies = [
  "libc",
-]
-
-[[package]]
-name = "itertools"
-version = "0.5.10"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4833d6978da405305126af4ac88569b5d71ff758581ce5a987dbfa3755f694fc"
-dependencies = [
- "either",
 ]
 
 [[package]]
@@ -791,7 +782,6 @@ name = "libbrainview"
 version = "0.1.0"
 dependencies = [
  "colorous",
- "ndarray 0.6.10",
  "neuroformats",
  "three-d",
 ]
@@ -943,26 +933,14 @@ dependencies = [
 
 [[package]]
 name = "ndarray"
-version = "0.6.10"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "89546d09f09763c3f9b975cb45f4f9941b884f07b26116ab0fbcb169a1bba9ff"
-dependencies = [
- "itertools 0.5.10",
- "matrixmultiply",
- "num-complex 0.1.43",
- "num-traits 0.1.43",
-]
-
-[[package]]
-name = "ndarray"
 version = "0.12.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7cf380a8af901ad627594013a3bbac903ae0a6f94e176e47e46b5bbc1877b928"
 dependencies = [
- "itertools 0.7.11",
+ "itertools",
  "matrixmultiply",
- "num-complex 0.2.4",
- "num-traits 0.2.14",
+ "num-complex",
+ "num-traits",
 ]
 
 [[package]]
@@ -1023,14 +1001,14 @@ dependencies = [
 
 [[package]]
 name = "neuroformats"
-version = "0.1.0"
+version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4f0c09b5d620a591c2cd7a2b671a700caf9c36393c455b0b09ca4faf32aad89f"
+checksum = "8bb3c2a10530612f0da3c1781926e85090da4a086525f1456a49d37cd075296f"
 dependencies = [
  "approx 0.4.0",
  "byteordered",
  "flate2",
- "ndarray 0.12.1",
+ "ndarray",
  "quick-error",
 ]
 
@@ -1076,21 +1054,12 @@ dependencies = [
 
 [[package]]
 name = "num-complex"
-version = "0.1.43"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b288631d7878aaf59442cffd36910ea604ecd7745c36054328595114001c9656"
-dependencies = [
- "num-traits 0.2.14",
-]
-
-[[package]]
-name = "num-complex"
 version = "0.2.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b6b19411a9719e753aff12e5187b74d60d3dc449ec3f4dc21e3989c3f554bc95"
 dependencies = [
  "autocfg 1.0.1",
- "num-traits 0.2.14",
+ "num-traits",
 ]
 
 [[package]]
@@ -1100,7 +1069,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d2cc698a63b549a70bc047073d2949cce27cd1c7b0a4a862d08a8031bc2801db"
 dependencies = [
  "autocfg 1.0.1",
- "num-traits 0.2.14",
+ "num-traits",
 ]
 
 [[package]]
@@ -1111,7 +1080,7 @@ checksum = "b2021c8337a54d21aca0d59a92577a029af9431cb59b909b03252b9c164fad59"
 dependencies = [
  "autocfg 1.0.1",
  "num-integer",
- "num-traits 0.2.14",
+ "num-traits",
 ]
 
 [[package]]
@@ -1122,16 +1091,7 @@ checksum = "12ac428b1cb17fce6f731001d307d351ec70a6d202fc2e60f7d4c5e42d8f4f07"
 dependencies = [
  "autocfg 1.0.1",
  "num-integer",
- "num-traits 0.2.14",
-]
-
-[[package]]
-name = "num-traits"
-version = "0.1.43"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "92e5113e9fd4cc14ded8e499429f396a20f98c772a47cc8622a736e1ec843c31"
-dependencies = [
- "num-traits 0.2.14",
+ "num-traits",
 ]
 
 [[package]]

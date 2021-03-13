@@ -1,14 +1,5 @@
-use ndarray::{Array2};
 
 
-pub fn a22vec<T: Clone>(a2 : Array2<T>) -> Vec<T> {
-    let mut ve : Vec<T> = Vec::with_capacity(a2.len());
-
-    for v in a2.iter() {
-        ve.push((*v).clone());
-    }
-    ve
-}
 
 pub fn f32tou32(a: Vec<i32>) -> Vec<u32> {
     let mut u : Vec<u32> = Vec::with_capacity(a.len());

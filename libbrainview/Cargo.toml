@@ -13,6 +13,5 @@ exclude = [".gitignore"]
 
 [dependencies]
 three-d = "0.6.0"
-ndarray = "0.6.1" # will be removed when neuroformats 0.2.0 is released
-neuroformats = "0.1.0"
+neuroformats = "0.2.0"
 colorous = "1.0.3"
