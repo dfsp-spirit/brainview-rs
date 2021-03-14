@@ -9,6 +9,7 @@ fn main() {
     //let args: Vec<String> = std::env::args().collect();
 
     let window = Window::new("Cortical thickness", Some((1280, 720))).unwrap();
+    let bg_color_rgba : [f32; 4] = [1.0, 1.0, 1.0, 1.0]; // Background color.
     let context = window.gl();
 
     let scene_center = vec3(0.0, 0.0, 0.0); // TODO: compute from meshes or translate meshes to center = 0,0,0.
@@ -65,7 +66,7 @@ fn main() {
             }
         }
 
-        Screen::write(&context, &ClearState::color_and_depth(0.8, 0.8, 0.8, 1.0, 1.0), || {
+        Screen::write(&context, &ClearState::color_and_depth(bg_color_rgba[0], bg_color_rgba[1], bg_color_rgba[2], bg_color_rgba[3], 1.0), || {
             let transformation = if do_transform { Mat4::from_angle_y(radians((frame_input.accumulated_time * 0.0005) as f32)) } else { Mat4::identity()};
             lh_mesh.render_color(RenderStates::default(), frame_input.viewport, &transformation, &camera)?;
             rh_mesh.render_color(RenderStates::default(), frame_input.viewport, &transformation, &camera)?;
