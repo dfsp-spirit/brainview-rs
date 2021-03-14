@@ -2,16 +2,16 @@
 
 use three_d::*;
 use neuroformats::{read_surf, read_curv};
-use libbrainview::{apply_colormap, colors_as_u8_4, f32tou32, vec32minmax, scale_to_01, mesh_from_colored_brain_mesh};
+use libbrainview::{apply_colormap, colors_as_u8_4, scale_to_01, mesh_from_colored_brain_mesh};
 use libbrainview::ColoredBrainMesh;
 
 fn main() {
-    let args: Vec<String> = std::env::args().collect();
+    //let args: Vec<String> = std::env::args().collect();
 
     let window = Window::new("Cortical thickness", Some((1280, 720))).unwrap();
     let context = window.gl();
 
-    let scene_center = vec3(0.0, 0.0, 0.0);
+    let scene_center = vec3(0.0, 0.0, 0.0); // TODO: compute from meshes or translate meshes to center = 0,0,0.
     let scene_radius = 300.0; // TODO: compute mesh max entend
     let mut camera = CameraControl::new(Camera::new_perspective(&context, scene_center + scene_radius * vec3(0.6, 0.3, 1.0).normalize(), scene_center, vec3(0.0, 1.0, 0.0),
                                              degrees(45.0), window.viewport().aspect(), 0.1, 1000.0).unwrap());
@@ -26,8 +26,9 @@ fn main() {
 
     // generate colors from morph data
     let gradient = colorous::VIRIDIS;
-    let lh_brain_colors = colors_as_u8_4(apply_colormap(scale_to_01(lh_curv.data), gradient), 255 as u8);
-    let rh_brain_colors = colors_as_u8_4(apply_colormap(scale_to_01(rh_curv.data), gradient), 255 as u8);
+    let mesh_alpha : u8 = 255; // The alpha channel value for the RGBA vertex colors of the mesh.
+    let lh_brain_colors = colors_as_u8_4(apply_colormap(scale_to_01(lh_curv.data), gradient), mesh_alpha);
+    let rh_brain_colors = colors_as_u8_4(apply_colormap(scale_to_01(rh_curv.data), gradient), mesh_alpha);
 
     let lh_cbmesh = ColoredBrainMesh::from_brainmesh_and_colors(&lh_white.mesh, lh_brain_colors).unwrap();
     let rh_cbmesh = ColoredBrainMesh::from_brainmesh_and_colors(&rh_white.mesh, rh_brain_colors).unwrap();
