@@ -2,8 +2,8 @@
 
 use three_d::*;
 use neuroformats::{read_surf, read_curv};
-use libbrainview::{apply_colormap, colors_as_u8_4, f32tou32, vec32minmax, scale_to_01};
-
+use libbrainview::{apply_colormap, colors_as_u8_4, f32tou32, vec32minmax, scale_to_01, mesh_from_colored_brain_mesh};
+use libbrainview::ColoredBrainMesh;
 
 fn main() {
     let args: Vec<String> = std::env::args().collect();
@@ -34,17 +34,18 @@ fn main() {
     //let lh_brain_colors: Vec<u8> = vec![255; lh_white.mesh.vertices.len() * 4];
     //let rh_brain_colors: Vec<u8> = vec![255; rh_white.mesh.vertices.len() * 4];
 
-    let lh_cpu_mesh = CPUMesh {
-        positions : lh_white.mesh.vertices, colors : Some(lh_brain_colors), indices : Some(f32tou32
-        (lh_white.mesh.faces)), ..Default::default()
+    let lh_cbmesh = ColoredBrainMesh {
+        mesh : lh_white.mesh,
+        vertex_colors : lh_brain_colors,
     };
-    let lh_mesh = Mesh::new(&context, &lh_cpu_mesh).unwrap();
 
-    let rh_cpu_mesh = CPUMesh {
-        positions : rh_white.mesh.vertices, colors : Some(rh_brain_colors), indices : Some(f32tou32
-        (rh_white.mesh.faces)), ..Default::default()
+    let rh_cbmesh = ColoredBrainMesh {
+        mesh : rh_white.mesh,
+        vertex_colors : rh_brain_colors,
     };
-    let rh_mesh = Mesh::new(&context, &rh_cpu_mesh).unwrap();
+
+    let lh_mesh = mesh_from_colored_brain_mesh(&lh_cbmesh, &context).unwrap();
+    let rh_mesh = mesh_from_colored_brain_mesh(&rh_cbmesh, &context).unwrap();
 
     // main loop
     let mut rotating = false;
