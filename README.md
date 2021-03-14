@@ -14,8 +14,7 @@ If you insist and have a recent Rust toolchain installed, you can build the curr
 git clone https://github.com/dfsp-spirit/brainview-rs
 cd brainview-rs
 
-cargo build --release
-cargo run
+cargo run    # will compile on first usage
 ```
 
 This will open a 3D window and show a rotating brain mesh, with vertex colors representing cortical thickness. The current version of this crate is basically a slighty modified version of the [three-d triangle example](https://github.com/asny/three-d/tree/0.6.0/examples/triangle).
