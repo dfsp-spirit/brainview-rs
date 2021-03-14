@@ -15,9 +15,11 @@ git clone https://github.com/dfsp-spirit/brainview-rs && cd brainview-rs/
 cargo run
 ```
 
-This will open a 3D window and show a rotating brain mesh, with vertex colors representing cortical thickness. The current version of this crate is basically a slighty modified version of the [three-d triangle example](https://github.com/asny/three-d/tree/0.6.0/examples/triangle).
+This will open a 3D window and show a rotating brain mesh, with vertex colors representing cortical thickness:
 
 ![Vis](./resources/web/brainview-rs.jpg?raw=true "Brain visualizationin Rust.")
+
+The current version of this crate is a very rough prototype, it's basically a slighty modified version of the [three-d triangle example](https://github.com/asny/three-d/tree/0.6.0/examples/triangle).
 
 
 
