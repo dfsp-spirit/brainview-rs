@@ -20,5 +20,7 @@ cargo run
 
 This will open a 3D window and show a rotating brain mesh, with vertex colors representing cortical thickness.
 
+![Vis](./resources/web/brainview-rs.jpg?raw=true "Brain visualization.")
+
 
 
