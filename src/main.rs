@@ -8,14 +8,6 @@ use libbrainview::ColoredBrainMesh;
 fn main() {
     //let args: Vec<String> = std::env::args().collect();
 
-    let window = Window::new("Cortical thickness", Some((1280, 720))).unwrap();
-    let bg_color_rgba : [f32; 4] = [1.0, 1.0, 1.0, 1.0]; // Background color.
-    let context = window.gl();
-
-    let scene_center = vec3(0.0, 0.0, 0.0); // TODO: compute from meshes or translate meshes to center = 0,0,0.
-    let scene_radius = 300.0; // TODO: compute mesh max entend
-    let mut camera = CameraControl::new(Camera::new_perspective(&context, scene_center + scene_radius * vec3(0.6, 0.3, 1.0).normalize(), scene_center, vec3(0.0, 1.0, 0.0),
-                                             degrees(45.0), window.viewport().aspect(), 0.1, 1000.0).unwrap());
 
     // Read brain meshes for both hemis.
     let lh_white = read_surf("resources/subjects_dir/subject1/surf/lh.white").unwrap();
@@ -32,8 +24,24 @@ fn main() {
     let lh_cbmesh = ColoredBrainMesh::from_brainmesh_and_colors(&lh_white.mesh, lh_brain_colors).unwrap();
     let rh_cbmesh = ColoredBrainMesh::from_brainmesh_and_colors(&rh_white.mesh, rh_brain_colors).unwrap();
 
-    let lh_mesh = mesh_from_colored_brain_mesh(&lh_cbmesh, &context).unwrap();
-    let rh_mesh = mesh_from_colored_brain_mesh(&rh_cbmesh, &context).unwrap();
+    scene(vec![lh_cbmesh, rh_cbmesh])
+}
+
+fn scene(meshes : Vec<ColoredBrainMesh>) { 
+    let window = Window::new("Cortical thickness", Some((1280, 720))).unwrap();
+    let bg_color_rgba : [f32; 4] = [1.0, 1.0, 1.0, 1.0]; // Background color.
+    let context = window.gl();
+
+    let scene_center = vec3(0.0, 0.0, 0.0); // TODO: compute from meshes or translate meshes to center = 0,0,0.
+    let scene_radius = 300.0; // TODO: compute mesh max entend
+    let mut camera = CameraControl::new(Camera::new_perspective(&context, scene_center + scene_radius * vec3(0.6, 0.3, 1.0).normalize(), scene_center, vec3(0.0, 1.0, 0.0),
+                                             degrees(45.0), window.viewport().aspect(), 0.1, 1000.0).unwrap());
+                                             
+    let mut threed_meshes : Vec<Mesh> = Vec::with_capacity(meshes.len());
+    for cbm in meshes.iter() {
+        threed_meshes.push(mesh_from_colored_brain_mesh(&cbm, &context).unwrap());
+    }
+                                         
 
     // main loop
     let mut cam_rotating = false;   // Whether the user is rotating the cam with the mouse.
@@ -68,8 +76,9 @@ fn main() {
 
         Screen::write(&context, &ClearState::color_and_depth(bg_color_rgba[0], bg_color_rgba[1], bg_color_rgba[2], bg_color_rgba[3], 1.0), || {
             let transformation = if do_transform { Mat4::from_angle_y(radians((frame_input.accumulated_time * 0.0005) as f32)) } else { Mat4::identity()};
-            lh_mesh.render_color(RenderStates::default(), frame_input.viewport, &transformation, &camera)?;
-            rh_mesh.render_color(RenderStates::default(), frame_input.viewport, &transformation, &camera)?;
+            for mesh in threed_meshes.iter() {
+                mesh.render_color(RenderStates::default(), frame_input.viewport, &transformation, &camera)?;
+            }
             Ok(())
         }).unwrap();
         
