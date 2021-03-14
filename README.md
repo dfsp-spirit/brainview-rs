@@ -2,7 +2,7 @@
 
 A simple viewer for surface-based structural neuroimaging data, written in [Rust](https://www.rust-lang.org/).
 
-The `brainview` crate is based on [neuroformats](https://github.com/dfsp-spirit/neuroformats) and [three-d](https://github.com/asny/three-d).
+The `brainview` crate is based on [neuroformats](https://github.com/dfsp-spirit/neuroformats) and [three-d](https://github.com/asny/three-d) by Asger Nyman Christiansen.
 
 # Usage
 
