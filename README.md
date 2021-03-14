@@ -2,7 +2,7 @@
 
 A simple viewer for surface-based structural neuroimaging data, written in [Rust](https://www.rust-lang.org/).
 
-The `brainview` crate is based on [neuroformats](https://github.com/dfsp-spirit/neuroformats) and [three-d](https://github.com/asny/three-d) by Asger Nyman Christiansen. It can visualize brain surface reconstructions and related per-vertex data computed in [FreeSurfer](http://freesurfer.net/), [CAT12](http://www.neuro.uni-jena.de/cat/) and other software packages which can output or convert to a supported file format.
+The `brainview` crate is based on [neuroformats](https://github.com/dfsp-spirit/neuroformats) and [three-d](https://github.com/asny/three-d) by Asger Nyman Christiansen. It can visualize brain surface meshes and related per-vertex data computed in [FreeSurfer](http://freesurfer.net/), [CAT12](http://www.neuro.uni-jena.de/cat/) and other software packages which can output or convert to a supported file format.
 
 
 ## Usage
