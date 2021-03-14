@@ -5,12 +5,12 @@ A simple viewer for surface-based structural neuroimaging data, written in [Rust
 The `brainview` crate is based on [neuroformats](https://github.com/dfsp-spirit/neuroformats) and [three-d](https://github.com/asny/three-d) by Asger Nyman Christiansen.
 
 
-# Usage
+## Usage
 
 This is WIP, come back another day.
 
 
-# Running the current prototype
+## Running the current prototype
 
 If you insist and have a recent Rust toolchain installed, you can build the current prototype from source and run it like this:
 
