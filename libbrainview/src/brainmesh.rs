@@ -15,6 +15,14 @@ pub struct ColoredBrainMesh {
 
 impl ColoredBrainMesh {
 
+    pub fn from_brainmesh_and_colors(b_mesh: &BrainMesh, colors: Vec<u8>) -> Result<ColoredBrainMesh> {
+        let cb_mesh = ColoredBrainMesh {
+            mesh: b_mesh.clone(),
+            vertex_colors: colors
+        };
+        Ok(cb_mesh)
+    }
+
     /// Get the vertex colors as u8 vector. For each vertex, 4 consecutive u8 values represent the red, green, blue, and alpha channel values, respectively.
     pub fn colors_rgba_u8(&self) -> Vec<u8> {
         self.vertex_colors.clone()

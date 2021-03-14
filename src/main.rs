@@ -34,15 +34,8 @@ fn main() {
     //let lh_brain_colors: Vec<u8> = vec![255; lh_white.mesh.vertices.len() * 4];
     //let rh_brain_colors: Vec<u8> = vec![255; rh_white.mesh.vertices.len() * 4];
 
-    let lh_cbmesh = ColoredBrainMesh {
-        mesh : lh_white.mesh,
-        vertex_colors : lh_brain_colors,
-    };
-
-    let rh_cbmesh = ColoredBrainMesh {
-        mesh : rh_white.mesh,
-        vertex_colors : rh_brain_colors,
-    };
+    let lh_cbmesh = ColoredBrainMesh::from_brainmesh_and_colors(&lh_white.mesh, lh_brain_colors).unwrap();
+    let rh_cbmesh = ColoredBrainMesh::from_brainmesh_and_colors(&rh_white.mesh, rh_brain_colors).unwrap();
 
     let lh_mesh = mesh_from_colored_brain_mesh(&lh_cbmesh, &context).unwrap();
     let rh_mesh = mesh_from_colored_brain_mesh(&rh_cbmesh, &context).unwrap();
