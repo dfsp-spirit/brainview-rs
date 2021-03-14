@@ -1,5 +1,8 @@
-//use colorous::{Color, Gradient, VIRIDIS};
 
+
+use crate::{scale_to_01};
+
+/// Apply a colormap to the given data, i.e., map the values to colors.
 pub fn apply_colormap(data: Vec<f32>, cmap: colorous::Gradient) -> Vec<colorous::Color> {
 
     let nan_color = colorous::Color{ r: 255 as u8, g: 255 as u8, b: 255 as u8};
@@ -14,6 +17,8 @@ pub fn apply_colormap(data: Vec<f32>, cmap: colorous::Gradient) -> Vec<colorous:
     colors
 }
 
+
+/// Translate `n` colorous::Color values to `4n` u8 values.
 pub fn colors_as_u8_4(colors : Vec<colorous::Color>, alpha: u8) -> Vec<u8> {
     let mut col_255 : Vec<u8> = Vec::with_capacity(colors.len() * 4);
     for v in colors.iter() {
@@ -24,4 +29,12 @@ pub fn colors_as_u8_4(colors : Vec<colorous::Color>, alpha: u8) -> Vec<u8> {
         col_255.push(alpha as u8);
     }
     col_255
+}
+
+
+/// Apply a colormap and return colors as required for three-d.
+pub fn color_from_data(data : Vec<f32>) -> Vec<u8> {
+    let mesh_alpha : u8 = 255;
+    let gradient = colorous::VIRIDIS;
+    colors_as_u8_4(apply_colormap(scale_to_01(data), gradient), mesh_alpha)
 }

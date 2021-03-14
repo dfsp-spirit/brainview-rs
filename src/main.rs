@@ -2,7 +2,7 @@
 
 use three_d::*;
 use neuroformats::{read_surf, read_curv};
-use libbrainview::{apply_colormap, colors_as_u8_4, scale_to_01, mesh_from_colored_brain_mesh};
+use libbrainview::{color_from_data, mesh_from_colored_brain_mesh};
 use libbrainview::ColoredBrainMesh;
 
 fn main() {
@@ -25,10 +25,8 @@ fn main() {
     let rh_curv = read_curv("resources/subjects_dir/subject1/surf/rh.thickness").unwrap();
 
     // generate colors from morph data
-    let gradient = colorous::VIRIDIS;
-    let mesh_alpha : u8 = 255; // The alpha channel value for the RGBA vertex colors of the mesh.
-    let lh_brain_colors = colors_as_u8_4(apply_colormap(scale_to_01(lh_curv.data), gradient), mesh_alpha);
-    let rh_brain_colors = colors_as_u8_4(apply_colormap(scale_to_01(rh_curv.data), gradient), mesh_alpha);
+    let lh_brain_colors = color_from_data(lh_curv.data);
+    let rh_brain_colors = color_from_data(rh_curv.data);
 
     let lh_cbmesh = ColoredBrainMesh::from_brainmesh_and_colors(&lh_white.mesh, lh_brain_colors).unwrap();
     let rh_cbmesh = ColoredBrainMesh::from_brainmesh_and_colors(&rh_white.mesh, rh_brain_colors).unwrap();
