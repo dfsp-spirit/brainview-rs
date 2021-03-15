@@ -1,7 +1,7 @@
 
 
 use neuroformats::{read_surf, read_curv};
-use libbrainview::{ColoredBrainMesh, scene};
+use libbrainview::{ColoredBrainMesh, scene, SceneSettings};
 
 fn main() {
     //let args: Vec<String> = std::env::args().collect();
@@ -19,5 +19,5 @@ fn main() {
     let rh_cbmesh = ColoredBrainMesh::from_brainmesh_and_data(&rh_white.mesh, rh_curv.data).unwrap();
 
     // Visualize the ColoredBrainMeshes.
-    scene(vec![lh_cbmesh, rh_cbmesh])
+    scene(vec![lh_cbmesh, rh_cbmesh], None)
 }

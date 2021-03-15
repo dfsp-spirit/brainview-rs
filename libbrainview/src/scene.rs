@@ -2,9 +2,25 @@
 use three_d::*;
 use crate::{ColoredBrainMesh, mesh_from_colored_brain_mesh};
 
-pub fn scene(meshes : Vec<ColoredBrainMesh>) { 
-    let window = Window::new("Cortical thickness", Some((1280, 720))).unwrap();
-    let bg_color_rgba : [f32; 4] = [1.0, 1.0, 1.0, 1.0]; // Background color.
+/// Settings, like background color, that can be used to customize the appearance of a scene.
+pub struct SceneSettings {
+    pub bg_color : [f32; 4],
+    pub window_size : (u32, u32)
+}
+
+impl SceneSettings {
+    pub fn default() -> Self {
+        SceneSettings {
+            bg_color : [1.0, 1.0, 1.0, 1.0],
+            window_size : (1280, 720),
+        }
+    }
+}
+
+pub fn scene(meshes : Vec<ColoredBrainMesh>, scenesettings : Option<SceneSettings>) { 
+    let scenesettings = scenesettings.unwrap_or(SceneSettings::default());
+    let window = Window::new("Cortical thickness", Some(scenesettings.window_size)).unwrap();
+    let bg_color_rgba = scenesettings.bg_color;
     let context = window.gl();
 
     let scene_center = vec3(0.0, 0.0, 0.0); // TODO: compute from meshes or translate meshes to center = 0,0,0.
