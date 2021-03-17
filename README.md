@@ -20,10 +20,13 @@ Have a look at [src/main.rs](./src/main.rs) to see the client code used to creat
 
 ## Running the current prototype
 
-If you insist and have a recent Rust toolchain installed, you can build the current prototype from source and run it like this:
+If you insist and have a recent [Rust toolchain installed](https://www.rust-lang.org/tools/install), you can build the current prototype from source and run it like this:
 
 ```
-git clone https://github.com/dfsp-spirit/brainview-rs && cd brainview-rs/
+git clone https://github.com/dfsp-spirit/brainview-rs
+cd brainview-rs/
+cargo build --release
+
 cargo run
 ```
 
