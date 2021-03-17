@@ -1,6 +1,6 @@
 # brainview
 
-A simple viewer for surface-based structural neuroimaging data, written in [Rust](https://www.rust-lang.org/).
+A high-level library and a simple viewer (binary) for surface-based structural neuroimaging data, written in [Rust](https://www.rust-lang.org/).
 
 The `brainview` crate is based on [neuroformats](https://github.com/dfsp-spirit/neuroformats) and [three-d](https://github.com/asny/three-d) by Asger Nyman Christiansen. It can visualize brain surface meshes and related per-vertex data computed from magnetic resonance images (MRI) in [FreeSurfer](http://freesurfer.net/), [CAT12](http://www.neuro.uni-jena.de/cat/) and other neuroimaging software packages which can output or convert to a supported file format.
 
@@ -14,6 +14,8 @@ Ideally, you should be able to load and visualize your neuroimaging data with tw
 ## Usage
 
 This is WIP, come back another day.
+
+Have a look at [src/main.rs](./src/main.rs) to see the client code used to create the prototype below. 
 
 
 ## Running the current prototype
@@ -29,5 +31,4 @@ This will open a 3D window and show a rotating brain mesh, with vertex colors re
 
 ![Vis](./resources/web/brainview-rs.jpg?raw=true "Brain visualizationin Rust.")
 
-The current version of this crate is a very rough prototype and should not be used yet. It's basically a slighty modified version of the [three-d triangle example](https://github.com/asny/three-d/tree/0.6.0/examples/triangle).
 
