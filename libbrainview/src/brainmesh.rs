@@ -33,7 +33,10 @@ impl ColoredBrainMesh {
     }
 
     /// Construct a ColoredBrainMesh from files in a FreeSurfer directory. This typically represents a single hemisphere.
-    pub fn from_freesurfer_dir(base_path : &Path, surface_file : &Path, morph_file: &Path) -> Result<ColoredBrainMesh> {
+    pub fn from_freesurfer_dir(base_path : &str, surface_file : &str, morph_file: &str) -> Result<ColoredBrainMesh> {
+        let base_path : &Path = &Path::new(base_path);
+        let surface_file : &Path = &Path::new(surface_file);
+        let morph_file : &Path = &Path::new(morph_file);
         let surface_file = base_path.join(&Path::new("surf")).join(surface_file);
         let morph_file = base_path.join(&Path::new("surf")).join(morph_file);
         
