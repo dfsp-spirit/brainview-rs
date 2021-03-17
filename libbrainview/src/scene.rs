@@ -5,7 +5,9 @@ use crate::{ColoredBrainMesh, mesh_from_colored_brain_mesh};
 /// Settings, like background color, that can be used to customize the appearance of a scene.
 pub struct SceneSettings {
     pub bg_color : [f32; 4],
-    pub window_size : (u32, u32)
+    pub window_size : (u32, u32),
+    pub window_title : String,
+    pub mouse_rotate_speed_factor: f32,
 }
 
 impl SceneSettings {
@@ -13,18 +15,20 @@ impl SceneSettings {
         SceneSettings {
             bg_color : [1.0, 1.0, 1.0, 1.0],
             window_size : (1280, 720),
+            window_title : String::from("Scene"),
+            mouse_rotate_speed_factor : 3.0,
         }
     }
 }
 
 pub fn scene(meshes : Vec<ColoredBrainMesh>, scenesettings : Option<SceneSettings>) { 
     let scenesettings = scenesettings.unwrap_or(SceneSettings::default());
-    let window = Window::new("Cortical thickness", Some(scenesettings.window_size)).unwrap();
+    let window = Window::new(&scenesettings.window_title, Some(scenesettings.window_size)).unwrap();
     let bg_color_rgba = scenesettings.bg_color;
     let context = window.gl();
 
     let scene_center = vec3(0.0, 0.0, 0.0); // TODO: compute from meshes or translate meshes to center = 0,0,0.
-    let scene_radius = 300.0; // TODO: compute mesh max entend
+    let scene_radius = 300.0; // TODO: compute mesh max entend (over all meshes)
     let mut camera = CameraControl::new(Camera::new_perspective(&context, scene_center + scene_radius * vec3(0.6, 0.3, 1.0).normalize(), scene_center, vec3(0.0, 1.0, 0.0),
                                              degrees(45.0), window.viewport().aspect(), 0.1, 1000.0).unwrap());
                                              
@@ -35,9 +39,9 @@ pub fn scene(meshes : Vec<ColoredBrainMesh>, scenesettings : Option<SceneSetting
                                          
 
     // main loop
-    let mut cam_rotating = false;   // Whether the user is rotating the cam with the mouse.
+    let mut cam_rotating = false;   // Whether the user is currently rotating the cam with the mouse.
     let mut do_transform = true;   // Whether the brain mesh is auto-rotating. Can be toggled on/off.
-    let mouse_rotate_speed_factor : f32 = 3.0;
+    let mouse_rotate_speed_factor : f32 = scenesettings.mouse_rotate_speed_factor;
     window.render_loop(move |frame_input|
     {
         camera.set_aspect(frame_input.viewport.aspect()).unwrap();

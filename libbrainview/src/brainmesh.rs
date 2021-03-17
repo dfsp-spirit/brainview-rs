@@ -1,9 +1,11 @@
 //! Datastructures modeling brain meshes.
 
-use neuroformats::BrainMesh;
+use std::path::{Path};
+
+use neuroformats::{BrainMesh, read_curv, read_surf};
 use crate::{color_from_data, error::{Result}};
 
-/// Models a vertex-colored BrainMesh.
+/// Models a vertex-colored BrainMesh, typically for a single hemisphere.
 #[derive(Debug, Clone, PartialEq)]
 pub struct ColoredBrainMesh {
     pub mesh : BrainMesh,
@@ -26,6 +28,20 @@ impl ColoredBrainMesh {
         let cb_mesh = ColoredBrainMesh {
             mesh: b_mesh.clone(),
             vertex_colors: color_from_data(data)
+        };
+        Ok(cb_mesh)
+    }
+
+    /// Construct a ColoredBrainMesh from files in a FreeSurfer directory. This typically represents a single hemisphere.
+    pub fn from_freesurfer_dir(base_path : &Path, surface_file : &Path, morph_file: &Path) -> Result<ColoredBrainMesh> {
+        let surface_file = base_path.join(&Path::new("surf")).join(surface_file);
+        let morph_file = base_path.join(&Path::new("surf")).join(morph_file);
+        
+        let surface = read_surf::<&Path>(&surface_file).unwrap();
+        let curv = read_curv::<&Path>(&morph_file).unwrap();
+        let cb_mesh = ColoredBrainMesh {
+            mesh: surface.mesh.clone(),
+            vertex_colors: color_from_data(curv.data)
         };
         Ok(cb_mesh)
     }

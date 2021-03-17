@@ -19,5 +19,6 @@ fn main() {
     let rh_cbmesh = ColoredBrainMesh::from_brainmesh_and_data(&rh_white.mesh, rh_curv.data).unwrap();
 
     // Visualize the ColoredBrainMeshes.
-    scene(vec![lh_cbmesh, rh_cbmesh], None)
+    let scenesettings = SceneSettings::default();  // Can be used to change resolution, background color, etc.
+    scene(vec![lh_cbmesh, rh_cbmesh], Some(scenesettings))
 }
