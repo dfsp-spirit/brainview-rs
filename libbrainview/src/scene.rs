@@ -30,6 +30,8 @@ pub fn scene(meshes : Vec<ColoredBrainMesh>, scenesettings : Option<SceneSetting
     let scene_center = vec3(0.0, 0.0, 0.0); // TODO: compute from meshes or translate meshes to center = 0,0,0.
     let scene_radius = 300.0; // TODO: compute mesh max entend (over all meshes)
     let cam_move_speed : f32 = scene_radius / 40.;
+    let cam_pan_speed : f32 = 5.;
+    let cam_zoom_speed_keys: f32 = 5.;
     let mut camera = CameraControl::new(Camera::new_perspective(&context, scene_center + scene_radius * vec3(0.6, 0.3, 1.0).normalize(), scene_center, vec3(0.0, 1.0, 0.0),
                                              degrees(45.0), window.viewport().aspect(), 0.1, 1000.0).unwrap());
                                              
@@ -66,7 +68,8 @@ pub fn scene(meshes : Vec<ColoredBrainMesh>, scenesettings : Option<SceneSetting
                         do_transform = !do_transform;
                     }
 
-                    // WASD cam controls, R+F is up/down
+                    // WASD cam controls, R+F is up/down. This movement direction is currently independent of 
+                    // the view direction: one always moves along the x/y/z axes. This is rather unintuitive.
                     if *kind == Key::W && *state == State::Pressed
                     {
                         camera.translate(&vec3(cam_move_speed, 0.0, 0.0)).unwrap();
@@ -91,6 +94,35 @@ pub fn scene(meshes : Vec<ColoredBrainMesh>, scenesettings : Option<SceneSetting
                     {
                         camera.translate(&vec3(0.0, 0.0,  -cam_move_speed)).unwrap();
                     }
+
+                    // Pan controls.
+                    if *kind == Key::ArrowLeft && *state == State::Pressed
+                    {
+                        camera.pan(cam_pan_speed, 0.0).unwrap();
+                    }
+                    if *kind == Key::ArrowRight && *state == State::Pressed
+                    {
+                        camera.pan(-cam_pan_speed, 0.0).unwrap();
+                    }
+                    if *kind == Key::ArrowUp && *state == State::Pressed
+                    {
+                        camera.pan(0.0, cam_pan_speed).unwrap();
+                    }
+                    if *kind == Key::ArrowDown && *state == State::Pressed
+                    {
+                        camera.pan(0.0, -cam_pan_speed).unwrap();
+                    }
+
+                    // Zoom via keys instead of mouse
+                    if *kind == Key::PageUp && *state == State::Pressed
+                    {
+                        camera.zoom(cam_zoom_speed_keys).unwrap();
+                    }
+                    if *kind == Key::PageDown && *state == State::Pressed
+                    {
+                        camera.zoom(-cam_zoom_speed_keys).unwrap();
+                    }
+                    
                 },
                 _ => {}
             }
