@@ -29,6 +29,7 @@ pub fn scene(meshes : Vec<ColoredBrainMesh>, scenesettings : Option<SceneSetting
 
     let scene_center = vec3(0.0, 0.0, 0.0); // TODO: compute from meshes or translate meshes to center = 0,0,0.
     let scene_radius = 300.0; // TODO: compute mesh max entend (over all meshes)
+    let cam_move_speed : f32 = scene_radius / 40.;
     let mut camera = CameraControl::new(Camera::new_perspective(&context, scene_center + scene_radius * vec3(0.6, 0.3, 1.0).normalize(), scene_center, vec3(0.0, 1.0, 0.0),
                                              degrees(45.0), window.viewport().aspect(), 0.1, 1000.0).unwrap());
                                              
@@ -60,9 +61,35 @@ pub fn scene(meshes : Vec<ColoredBrainMesh>, scenesettings : Option<SceneSetting
                     camera.zoom(delta.1 as f32).unwrap();
                 },
                 Event::Key { state, kind, .. } => {
-                    if *kind == Key::R && *state == State::Pressed
+                    if *kind == Key::P && *state == State::Pressed
                     {
                         do_transform = !do_transform;
+                    }
+
+                    // WASD cam controls, R+F is up/down
+                    if *kind == Key::W && *state == State::Pressed
+                    {
+                        camera.translate(&vec3(cam_move_speed, 0.0, 0.0)).unwrap();
+                    }
+                    if *kind == Key::S && *state == State::Pressed
+                    {
+                        camera.translate(&vec3(-cam_move_speed, 0.0, 0.0)).unwrap();
+                    }
+                    if *kind == Key::A && *state == State::Pressed
+                    {
+                        camera.translate(&vec3(0.0, cam_move_speed, 0.0)).unwrap();
+                    }
+                    if *kind == Key::D && *state == State::Pressed
+                    {
+                        camera.translate(&vec3(0.0, -cam_move_speed, 0.0)).unwrap();
+                    }
+                    if *kind == Key::R && *state == State::Pressed
+                    {
+                        camera.translate(&vec3(0.0, 0.0, cam_move_speed)).unwrap();
+                    }
+                    if *kind == Key::F && *state == State::Pressed
+                    {
+                        camera.translate(&vec3(0.0, 0.0,  -cam_move_speed)).unwrap();
                     }
                 },
                 _ => {}
