@@ -15,12 +15,12 @@ Ideally, you should be able to load and visualize your neuroimaging data with tw
 
 This is WIP, come back another day.
 
-Have a look at [src/main.rs](./src/main.rs) to see the client code used to create the prototype below. 
+You can have a look at [src/main.rs](./src/main.rs) to see the client code used to create the prototype below.
 
 
 ## Running the current prototype
 
-If you insist and have a recent [Rust toolchain installed](https://www.rust-lang.org/tools/install), you can build the current prototype from source and run it like this:
+If you insist and have a recent Rust toolchain installed, you can build the current prototype from source and run it like this:
 
 ```
 git clone https://github.com/dfsp-spirit/brainview-rs
