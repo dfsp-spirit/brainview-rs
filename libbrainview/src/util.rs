@@ -25,7 +25,7 @@ pub fn f32tou32(data: Vec<i32>) -> Vec<u32> {
 ///
 /// If the `data` input vector is empty.
 ///
-/// TODO: Handle NaN (and infinite?) values. Handle empty input vector.
+/// TODO: Handle NaN (and infinite?) values.
 pub fn vec32minmax(data : &Vec<f32>) -> [f32; 2] {
     if (*data).is_empty() {
         panic!("Input data must not be empty.");

@@ -53,5 +53,7 @@ impl ColoredBrainMesh {
     pub fn colors_rgba_u8(&self) -> Vec<u8> {
         self.vertex_colors.clone()
     }
+
+    
 }
 

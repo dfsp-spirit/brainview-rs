@@ -10,7 +10,10 @@ pub struct SceneSettings {
     pub mouse_rotate_speed_factor: f32,
 }
 
+
 impl SceneSettings {
+
+    /// The default scene settings.
     pub fn default() -> Self {
         SceneSettings {
             bg_color : [1.0, 1.0, 1.0, 1.0],
@@ -21,6 +24,11 @@ impl SceneSettings {
     }
 }
 
+
+/// Open a windows and render a scene containing the given meshes.
+///
+/// The SceneSettings are optional, they can be used to customize the visualization. One can navigate in the scene,
+/// zoom the camera, etc with the mouse or with key controls.
 pub fn scene(meshes : Vec<ColoredBrainMesh>, scenesettings : Option<SceneSettings>) { 
     let scenesettings = scenesettings.unwrap_or(SceneSettings::default());
     let window = Window::new(&scenesettings.window_title, Some(scenesettings.window_size)).unwrap();
@@ -41,9 +49,9 @@ pub fn scene(meshes : Vec<ColoredBrainMesh>, scenesettings : Option<SceneSetting
     }
                                          
 
-    // main loop
-    let mut cam_rotating = false;   // Whether the user is currently rotating the cam with the mouse.
-    let mut do_transform = true;   // Whether the brain mesh is auto-rotating. Can be toggled on/off.
+    // Render loop.
+    let mut is_cam_mouse_rotating = false;     // Whether the user is currently rotating the cam with the mouse.
+    let mut are_meshes_auto_rotating = true;   // Whether the brain mesh is auto-rotating. Can be toggled on/off.
     let mouse_rotate_speed_factor : f32 = scenesettings.mouse_rotate_speed_factor;
     window.render_loop(move |frame_input|
     {
@@ -52,10 +60,10 @@ pub fn scene(meshes : Vec<ColoredBrainMesh>, scenesettings : Option<SceneSetting
         for event in frame_input.events.iter() {
             match event {
                 Event::MouseClick { state, button, .. } => {
-                    cam_rotating = *button == MouseButton::Left && *state == State::Pressed;
+                    is_cam_mouse_rotating = *button == MouseButton::Left && *state == State::Pressed;
                 },
                 Event::MouseMotion { delta, .. } => {
-                    if cam_rotating {
+                    if is_cam_mouse_rotating {
                         camera.rotate_around_up((delta.0 as f32) * mouse_rotate_speed_factor, (delta.1 as f32) * mouse_rotate_speed_factor).unwrap();
                     }
                 },
@@ -65,7 +73,7 @@ pub fn scene(meshes : Vec<ColoredBrainMesh>, scenesettings : Option<SceneSetting
                 Event::Key { state, kind, .. } => {
                     if *kind == Key::P && *state == State::Pressed
                     {
-                        do_transform = !do_transform;
+                        are_meshes_auto_rotating = !are_meshes_auto_rotating;
                     }
 
                     // WASD cam controls, R+F is up/down. This movement direction is currently independent of 
@@ -129,7 +137,7 @@ pub fn scene(meshes : Vec<ColoredBrainMesh>, scenesettings : Option<SceneSetting
         }
 
         Screen::write(&context, &ClearState::color_and_depth(bg_color_rgba[0], bg_color_rgba[1], bg_color_rgba[2], bg_color_rgba[3], 1.0), || {
-            let transformation = if do_transform { Mat4::from_angle_y(radians((frame_input.accumulated_time * 0.0005) as f32)) } else { Mat4::identity()};
+            let transformation = if are_meshes_auto_rotating { Mat4::from_angle_y(radians((frame_input.accumulated_time * 0.0005) as f32)) } else { Mat4::identity()};
             for mesh in threed_meshes.iter() {
                 mesh.render_color(RenderStates::default(), frame_input.viewport, &transformation, &camera)?;
             }
@@ -139,3 +147,4 @@ pub fn scene(meshes : Vec<ColoredBrainMesh>, scenesettings : Option<SceneSetting
         FrameOutput::default()
     }).unwrap();
 }
+
