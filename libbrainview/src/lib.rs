@@ -9,6 +9,6 @@ pub mod scene;
 pub use color::{color_from_data};
 pub use util::{f32tou32, vec32minmax, scale_to_01};
 pub use brainmesh::{ColoredBrainMesh};
-pub use threed_adapter::{mesh_from_colored_brain_mesh};
+pub use threed_adapter::{mesh_from_colored_brain_mesh, brain_mesh_aabb};
 pub use scene::{scene, SceneSettings};
 

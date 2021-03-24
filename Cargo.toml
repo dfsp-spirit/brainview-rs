@@ -16,6 +16,6 @@ exclude = ["/examples", "/resources", ".gitignore"]
 [dependencies]
 libbrainview = { path = "libbrainview" }
 three-d = "0.6.0"
-neuroformats = "0.2.0"
+neuroformats = "0.2.2"
 colorous = "1.0.3"
 
