@@ -1048,9 +1048,9 @@ dependencies = [
 
 [[package]]
 name = "neuroformats"
-version = "0.2.1"
+version = "0.2.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "580ad6239c69c1112a0be692919f8de8322ad1932addbe77ad6e65ca1a082cd5"
+checksum = "306be7b8449683cff7853bb510fbd70f532d7986faa9a237d53bf593e8b0b986"
 dependencies = [
  "approx 0.4.0",
  "byteordered",
