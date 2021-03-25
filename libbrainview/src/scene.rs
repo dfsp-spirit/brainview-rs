@@ -10,6 +10,7 @@ pub struct SceneSettings {
     pub mouse_rotate_speed_factor: f32,
     pub cam_pan_speed: f32,
     pub cam_zoom_speed_keys: f32,
+    pub auto_rotate_speed_factor: f32,
 }
 
 
@@ -24,11 +25,14 @@ impl SceneSettings {
             mouse_rotate_speed_factor : 3.0,
             cam_pan_speed: 5.0,
             cam_zoom_speed_keys: 5.0,
+            auto_rotate_speed_factor: 0.0005,
         }
     }
 }
 
 
+/// Compute the center of the whole scene, i.e., over all meshes. Used to determine 
+/// where the camera should look.
 fn compute_meshes_center(cb_meshes: &Vec<ColoredBrainMesh>) -> (f32, f32, f32) {
     let (min_x, max_x, min_y, max_y, min_z, max_z) = compute_meshes_minmax_coords(cb_meshes);
     let cx = (min_x + max_x) / 2.0;
@@ -37,6 +41,10 @@ fn compute_meshes_center(cb_meshes: &Vec<ColoredBrainMesh>) -> (f32, f32, f32) {
     (cx, cy, cz)
 }
 
+
+/// Compute the min max coords (like an axis-aligned bounding box) for the whole scene, i.e.,
+/// over all meshes. Used to determine how far the camera
+/// should be from the scene center to see everything.
 fn compute_meshes_minmax_coords(cb_meshes: &Vec<ColoredBrainMesh>) -> (f32, f32, f32, f32, f32, f32) {
     if cb_meshes.is_empty() {
         panic!("Mesh list must no be empty.");
@@ -61,6 +69,9 @@ fn compute_meshes_minmax_coords(cb_meshes: &Vec<ColoredBrainMesh>) -> (f32, f32,
     }    
 }
 
+
+/// Compute the radius of the whole scene, i.e., over all meshes. Used to determine how far the camera
+/// should be from the scene center to see everything.
 fn compute_meshes_max_radius(cb_meshes: &Vec<ColoredBrainMesh>) -> f32 {
     let mm = compute_meshes_minmax_coords(cb_meshes);
     let dx = mm.1 - mm.0;
@@ -89,7 +100,6 @@ pub fn scene(meshes : Vec<ColoredBrainMesh>, scenesettings : Option<SceneSetting
     let scene_center = vec3(sc.0, sc.1, sc.2);
     let scene_radius = compute_meshes_max_radius(&meshes) * 3.0;
     let cam_move_speed : f32 = scene_radius / 40.;
-    //println!("Scene center is {} {} {}, radius is {}.", sc.0, sc.1, sc.2, scene_radius);
     let mut camera = CameraControl::new(Camera::new_perspective(&context, scene_center + scene_radius * vec3(0.6, 0.3, 1.0).normalize(), scene_center, vec3(0.0, 1.0, 0.0),
                                              degrees(45.0), window.viewport().aspect(), 0.1, 1000.0).unwrap());
                                              
@@ -103,7 +113,7 @@ pub fn scene(meshes : Vec<ColoredBrainMesh>, scenesettings : Option<SceneSetting
     // Render loop.
     let mut is_cam_mouse_rotating = false;     // Whether the user is currently rotating the cam with the mouse.
     let mut are_meshes_auto_rotating = true;   // Whether the brain mesh is auto-rotating. Can be toggled on/off.
-    let mouse_rotate_speed_factor : f32 = scenesettings.mouse_rotate_speed_factor;
+    
     window.render_loop(move |frame_input|
     {
         camera.set_aspect(frame_input.viewport.aspect()).unwrap();
@@ -115,7 +125,7 @@ pub fn scene(meshes : Vec<ColoredBrainMesh>, scenesettings : Option<SceneSetting
                 },
                 Event::MouseMotion { delta, .. } => {
                     if is_cam_mouse_rotating {
-                        camera.rotate_around_up((delta.0 as f32) * mouse_rotate_speed_factor, (delta.1 as f32) * mouse_rotate_speed_factor).unwrap();
+                        camera.rotate_around_up((delta.0 as f32) * scenesettings.mouse_rotate_speed_factor, (delta.1 as f32) * scenesettings.mouse_rotate_speed_factor).unwrap();
                     }
                 },
                 Event::MouseWheel { delta, .. } => {
@@ -187,8 +197,9 @@ pub fn scene(meshes : Vec<ColoredBrainMesh>, scenesettings : Option<SceneSetting
             }
         }
 
+        // Do the actual rendering.
         Screen::write(&context, &ClearState::color_and_depth(scenesettings.bg_color[0], scenesettings.bg_color[1], scenesettings.bg_color[2], scenesettings.bg_color[3], 1.0), || {
-            let transformation = if are_meshes_auto_rotating { Mat4::from_angle_y(radians((frame_input.accumulated_time * 0.0005) as f32)) } else { Mat4::identity()};
+            let transformation = if are_meshes_auto_rotating { Mat4::from_angle_y(radians((frame_input.accumulated_time * scenesettings.auto_rotate_speed_factor) as f32)) } else { Mat4::identity()};
             for mesh in threed_meshes.iter() {
                 mesh.render_color(RenderStates::default(), frame_input.viewport, &transformation, &camera)?;
             }
