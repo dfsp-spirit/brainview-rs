@@ -10,7 +10,7 @@ pub struct SceneSettings {
     pub mouse_rotate_speed_factor: f32,
     pub cam_pan_speed: f32,
     pub cam_zoom_speed_keys: f32,
-    pub auto_rotate_speed_factor: f32,
+    pub auto_rotate_speed_factor: f64,
 }
 
 
