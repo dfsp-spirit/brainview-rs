@@ -20,8 +20,12 @@ fn main() {
 
 
     // * Automatically create a ColoredBrainMesh from the given files in the standard FreeSurfer output directory structure.
-    let lh_cbmesh = ColoredBrainMesh::from_freesurfer_dir("resources/subjects_dir/subject1", "lh.white", "lh.thickness").unwrap();
-    let rh_cbmesh = ColoredBrainMesh::from_freesurfer_dir("resources/subjects_dir/subject1", "rh.white", "rh.thickness").unwrap();
+    //let lh_cbmesh = ColoredBrainMesh::from_freesurfer_dir("resources/subjects_dir/subject1", "lh.white", "lh.thickness").unwrap();
+    //let rh_cbmesh = ColoredBrainMesh::from_freesurfer_dir("resources/subjects_dir/subject1", "rh.white", "rh.thickness").unwrap();
+
+    // * Automatically create a ColoredBrainMesh from the given annot files in the standard FreeSurfer output directory structure.
+    let lh_cbmesh = ColoredBrainMesh::from_freesurfer_annot("resources/subjects_dir/subject1", "lh.white", "lh.aparc.annot").unwrap();
+    let rh_cbmesh = ColoredBrainMesh::from_freesurfer_annot("resources/subjects_dir/subject1", "rh.white", "rh.aparc.annot").unwrap();
 
     // Visualize the ColoredBrainMeshes.
     let scenesettings = SceneSettings::default();  // Can be used to change resolution, background color, etc.
