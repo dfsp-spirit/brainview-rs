@@ -64,7 +64,7 @@ impl ColoredBrainMesh {
         let annot = read_annot::<&Path>(&annot_file).unwrap();
         let cb_mesh = ColoredBrainMesh {
             mesh: surface.mesh.clone(),
-            vertex_colors: annot.vertex_colors(true),
+            vertex_colors: annot.vertex_colors(true, 0),
         };
         Ok(cb_mesh)
     }
