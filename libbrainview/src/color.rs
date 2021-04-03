@@ -5,7 +5,7 @@ use crate::{scale_to_01};
 /// Apply a colormap to the given data, i.e., map the values to colors.
 pub fn apply_colormap(data: Vec<f32>, cmap: colorous::Gradient) -> Vec<colorous::Color> {
 
-    let nan_color = colorous::Color{ r: 255 as u8, g: 255 as u8, b: 255 as u8};
+    let nan_color = colorous::Color{ r: 245 as u8, g: 245 as u8, b: 245 as u8};
     let mut colors : Vec<colorous::Color> = Vec::with_capacity(data.len());
     for v in data.iter() {
         if v.is_nan() {
