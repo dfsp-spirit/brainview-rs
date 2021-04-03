@@ -23,12 +23,15 @@ You can have a look at [src/main.rs](./src/main.rs) to see the client code used 
 If you insist and have a recent Rust toolchain installed, you can build the current prototype from source and run it like this:
 
 ```
+git clone https://github.com/dfsp-spirit/neuroformats-rs
 git clone https://github.com/dfsp-spirit/brainview-rs
 cd brainview-rs/
 cargo build --release
 
 cargo run
 ```
+
+Note that you need the neuroformats-rs repo in the same directory as it is currently loaded from there. (Yes, this is WIP.)
 
 This will open a 3D window and show a rotating brain mesh, with vertex colors representing cortical thickness:
 
