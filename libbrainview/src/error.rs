@@ -9,8 +9,8 @@ quick_error! {
     #[derive(Debug)]
     pub enum BrainviewError {
         
-        InvalidCurvFormat {
-            display("Invalid Curv file")
+        LabelNotBinary {
+            display("Label not binary, but binary data view requested.")
         }
 
 

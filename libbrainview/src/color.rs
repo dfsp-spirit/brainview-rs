@@ -38,3 +38,4 @@ pub fn color_from_data(data : Vec<f32>) -> Vec<u8> {
     let gradient = colorous::VIRIDIS;
     colors_as_u8_4(apply_colormap(scale_to_01(data), gradient), mesh_alpha)
 }
+
