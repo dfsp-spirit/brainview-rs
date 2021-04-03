@@ -2,8 +2,9 @@
 
 use std::path::{Path};
 
-use neuroformats::{BrainMesh, read_curv, read_surf, read_annot};
-use crate::{color_from_data, error::{Result}};
+use neuroformats::{BrainMesh, read_curv, read_surf, read_annot, read_label};
+use crate::{FsLabelDisplay, color_from_data, error::{Result}};
+use crate::vertexcolor::VertexColor;
 
 /// Models a vertex-colored BrainMesh, typically for a single hemisphere.
 #[derive(Debug, Clone, PartialEq)]
@@ -65,6 +66,29 @@ impl ColoredBrainMesh {
         let cb_mesh = ColoredBrainMesh {
             mesh: surface.mesh.clone(),
             vertex_colors: annot.vertex_colors(true, 0),
+        };
+        Ok(cb_mesh)
+    }
+
+
+    /// Construct a ColoredBrainMesh from a label file in a FreeSurfer directory. This typically represents a single hemisphere.
+    pub fn from_freesurfer_label(base_path : &str, surface_file : &str, label_file: &str) -> Result<ColoredBrainMesh> {
+        let base_path : &Path = &Path::new(base_path);
+        let surface_file : &Path = &Path::new(surface_file);
+        let label_file : &Path = &Path::new(label_file);
+        let surface_file = base_path.join(&Path::new("surf")).join(surface_file);
+        let label_file = base_path.join(&Path::new("label")).join(label_file);
+        
+        let surface = read_surf::<&Path>(&surface_file).unwrap();
+        let label = read_label::<&Path>(&label_file).unwrap();
+
+        let red : [u8; 4] = [255, 0, 0, 255];
+        let white : [u8; 4] = [255, 255, 255, 255];
+        let label_display = FsLabelDisplay { label : label, num_surface_verts: surface.mesh.num_vertices(), color_bin_inside: red, color_bin_outside: white };
+
+        let cb_mesh = ColoredBrainMesh {
+            mesh: surface.mesh.clone(),
+            vertex_colors: label_display.vertex_color_rgba(), // via VertexColor trait.
         };
         Ok(cb_mesh)
     }
