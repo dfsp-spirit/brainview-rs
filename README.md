@@ -13,7 +13,7 @@ Ideally, you should be able to load and visualize your neuroimaging data with tw
 
 ## Usage
 
-This is WIP, come back another day.
+This is WIP, come back another day. Once it's ready, the project will be split into a lib crate for `libbrainview` and a binary crate for the `brainviewer` application.
 
 You can have a look at [src/main.rs](./src/main.rs) to see the client code used to create the prototype below.
 
