@@ -31,10 +31,13 @@ cargo build --release
 cargo run
 ```
 
-Note that you need the neuroformats-rs repo in the same directory as it is currently loaded from there. (Yes, this is WIP.)
-
 This will open a 3D window and show a rotating brain mesh, with vertex colors representing cortical thickness:
 
 ![Vis](./resources/web/brainview-rs.jpg?raw=true "Brain visualizationin Rust.")
+
+
+
+Note that you need the `neuroformats-rs` repo on the same directory level as it is currently loaded from a relative local path, not from crates.io. (Yes, this crate is really WIP.) If compilation fails with complaints about missing rust version features, your Rust toolchain is too old and you need to update it by running `rustup update`.
+
 
 

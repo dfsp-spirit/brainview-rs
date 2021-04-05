@@ -13,6 +13,10 @@ quick_error! {
             display("Label not binary, but binary data view requested.")
         }
 
+        StringNotFsDisplayable {
+            display("FsDisplayable cannot be created from this string.")
+        }
+
 
         /// I/O Error
         Io(err: IOError) {
