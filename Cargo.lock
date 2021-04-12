@@ -58,6 +58,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "anyhow"
+version = "1.0.40"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "28b2cd92db5cbd74e8e5028f7e27dd7aa3090e89e4f2a197cc7c8dfb69c7063b"
+
+[[package]]
 name = "approx"
 version = "0.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -141,7 +147,7 @@ version = "0.1.0"
 dependencies = [
  "colorous",
  "libbrainview",
- "neuroformats 0.2.2",
+ "neuroformats",
  "structopt",
  "three-d",
 ]
@@ -864,8 +870,9 @@ dependencies = [
 name = "libbrainview"
 version = "0.1.0"
 dependencies = [
+ "anyhow",
  "colorous",
- "neuroformats 0.2.3",
+ "neuroformats",
  "quick-error",
  "three-d",
 ]
@@ -1102,21 +1109,9 @@ dependencies = [
 
 [[package]]
 name = "neuroformats"
-version = "0.2.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "306be7b8449683cff7853bb510fbd70f532d7986faa9a237d53bf593e8b0b986"
-dependencies = [
- "approx 0.4.0",
- "byteordered",
- "flate2",
- "ndarray",
- "ndarray-stats",
- "quick-error",
-]
-
-[[package]]
-name = "neuroformats"
 version = "0.2.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b10e235e33f16dec172894292ae7757151a5e71f336beb4b44cef7cb32d18cf9"
 dependencies = [
  "approx 0.4.0",
  "byteordered",

@@ -5,6 +5,7 @@ use std::path::{Path};
 use neuroformats::{BrainMesh, read_curv, read_surf, read_annot, read_label};
 use crate::{FsLabelDisplay, color_from_data, error::{Result, BrainviewError}};
 use crate::vertexcolor::VertexColor;
+use crate::fs_filepath::{fs_curv_file_from_base, fs_surf_file_from_base, fs_label_file_from_base, fs_annot_file_from_base};
 
 /// Models a vertex-colored BrainMesh for a single hemisphere.
 #[derive(Debug, Clone, PartialEq)]
@@ -63,6 +64,15 @@ impl ColoredBrainMesh {
 
 
     /// Construct a ColoredBrainMesh from morphometry data files in a FreeSurfer directory. This typically represents a single hemisphere.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use libbrainview::ColoredBrainMesh;
+    /// let lh_surf = "../resources/subjects_dir/subject1/surf/lh.white";
+    /// let lh_curv = "../resources/subjects_dir/subject1/surf/lh.thickness";
+    /// let cbm : ColoredBrainMesh = ColoredBrainMesh::from_freesurfer_curv(lh_surf, lh_curv).unwrap();
+    /// ```
     pub fn from_freesurfer_curv(surface_file_path : &str, curv_file_path: &str) -> Result<ColoredBrainMesh> {
         let surface_file = &Path::new(surface_file_path);
         let curv_file = &Path::new(curv_file_path);
@@ -76,25 +86,30 @@ impl ColoredBrainMesh {
     }
 
     /// Construct a ColoredBrainMesh from morphometry data files in a FreeSurfer directory. This typically represents a single hemisphere.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use libbrainview::ColoredBrainMesh;
+    /// let base_path = "../resources/subjects_dir/subject1";
+    /// let surf = "lh.white";
+    /// let curv = "lh.thickness";
+    /// let cbm : ColoredBrainMesh = ColoredBrainMesh::from_freesurfer_curv_base(base_path, surf, curv).unwrap();
+    /// ```
     pub fn from_freesurfer_curv_base(base_path : &str, surface_file : &str, curv_file: &str) -> Result<ColoredBrainMesh> {
-        let base_path : &Path = &Path::new(base_path);
-        let surface_file : &Path = &Path::new(surface_file);
-        let curv_file : &Path = &Path::new(curv_file);
-        let surface_file = base_path.join(&Path::new("surf")).join(surface_file);
-        let curv_file = base_path.join(&Path::new("surf")).join(curv_file);
-        ColoredBrainMesh::from_freesurfer_curv(surface_file.to_str().unwrap(), curv_file.to_str().unwrap())        
+        let surface_file = fs_surf_file_from_base(base_path, surface_file, true).unwrap();
+        let curv_file = fs_curv_file_from_base(base_path, curv_file, true).unwrap();
+        ColoredBrainMesh::from_freesurfer_curv(&surface_file, &curv_file)        
     }
 
 
     /// Construct a ColoredBrainMesh from brain atlas surface parcellation files in a FreeSurfer directory. This typically represents a single hemisphere.
     pub fn from_freesurfer_annot_base(base_path : &str, surface_file : &str, annot_file: &str) -> Result<ColoredBrainMesh> {
-        let base_path : &Path = &Path::new(base_path);
-        let surface_file : &Path = &Path::new(surface_file);
-        let annot_file : &Path = &Path::new(annot_file);
-        let surface_file = base_path.join(&Path::new("surf")).join(surface_file);
-        let annot_file = base_path.join(&Path::new("label")).join(annot_file);
-        ColoredBrainMesh::from_freesurfer_annot(surface_file.to_str().unwrap(), annot_file.to_str().unwrap())        
+        let surface_file = fs_surf_file_from_base(base_path, surface_file, true).unwrap();
+        let annot_file = fs_annot_file_from_base(base_path, annot_file, true).unwrap();
+        ColoredBrainMesh::from_freesurfer_annot(&surface_file, &annot_file)        
     }
+
 
     /// Construct a ColoredBrainMesh from brain atlas surface parcellation files in a FreeSurfer directory. This typically represents a single hemisphere.
     pub fn from_freesurfer_annot(surface_file_path : &str, annot_file_path: &str) -> Result<ColoredBrainMesh> {
@@ -112,12 +127,11 @@ impl ColoredBrainMesh {
 
     /// Construct a ColoredBrainMesh from a label file in a FreeSurfer directory. This typically represents a single hemisphere.
     pub fn from_freesurfer_label_base(base_path : &str, surface_file : &str, label_file: &str) -> Result<ColoredBrainMesh> {
-        let base_path : &Path = &Path::new(base_path);
-        let surface_file : &Path = &Path::new(surface_file);
-        let label_file : &Path = &Path::new(label_file);
-        let surface_file = base_path.join(&Path::new("surf")).join(surface_file);
-        let label_file = base_path.join(&Path::new("label")).join(label_file);
-        ColoredBrainMesh::from_freesurfer_label(surface_file.to_str().unwrap(), label_file.to_str().unwrap())
+
+        let surface_file = fs_surf_file_from_base(base_path, surface_file, true).unwrap();
+        let label_file = fs_label_file_from_base(base_path, label_file, true).unwrap();
+        
+        ColoredBrainMesh::from_freesurfer_label(&surface_file, &label_file)
     }
 
     /// Construct a ColoredBrainMesh from a label file in a FreeSurfer directory. This typically represents a single hemisphere.
@@ -178,6 +192,16 @@ impl ColoredBrainMesh {
 impl ColoredBrain {
 
     /// Construct a ColoredBrain from a base path and surface and display type strings.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use libbrainview::{ColoredBrainMesh, FsDisplayable};
+    /// let base_path = "../resources/subjects_dir/subject1";
+    /// let surf_nh = "white";
+    /// let vis_nh = "thickness";
+    /// let cbm : ColoredBrainMesh = ColoredBrainMesh::from_freesurfer_type_base(base_path, surf_nh, vis_nh, &FsDisplayable::from_str("curv").unwrap()).unwrap();
+    /// ```
     pub fn from_freesurfer_type_base(base_path : &str, surface_file_no_hemi : &str, vis_file_no_hemi: &str, vis_type: &FsDisplayable) -> Result<ColoredBrain> {
         let lh_surface_file = &format!("lh.{}", surface_file_no_hemi);
         let rh_surface_file = &format!("rh.{}", surface_file_no_hemi);
@@ -190,6 +214,16 @@ impl ColoredBrain {
     }
 
     /// Construct a ColoredBrain from absolute file paths for both hemis.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use libbrainview::ColoredBrainMesh;
+    /// let base_path = "../resources/subjects_dir/subject1";
+    /// let surf = "lh.white";
+    /// let curv = "lh.thickness";
+    /// let cbm : ColoredBrainMesh = ColoredBrainMesh::from_freesurfer_curv_base(base_path, surf, curv).unwrap();
+    /// ```
     pub fn from_freesurfer_type(lh_surface_file : &str, rh_surface_file : &str, lh_vis_file: &str, rh_vis_file: &str, vis_type: &FsDisplayable) -> Result<ColoredBrain> {
         let lh = ColoredBrainMesh::from_freesurfer_type(lh_surface_file, lh_vis_file, vis_type).unwrap();
         let rh = ColoredBrainMesh::from_freesurfer_type(rh_surface_file, rh_vis_file, vis_type).unwrap();
@@ -197,7 +231,7 @@ impl ColoredBrain {
         Ok(cb)
     }
 
-    /// Returns a vector of owned (cloned) ColoredBrainMeshes from this ColoredBrain. The order is lh, rh.
+    /// Return a vector of owned (cloned) ColoredBrainMeshes from this ColoredBrain. The order is lh, rh.
     pub fn to_vec(&self) -> Vec<ColoredBrainMesh> {
         let v = vec![self.lh.clone(), self.rh.clone()];
         v
