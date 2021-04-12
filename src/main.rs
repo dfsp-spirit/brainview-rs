@@ -38,7 +38,7 @@ struct Opt {
 
 fn main() {
     let opts = Opt::from_args();
-    println!("{:?}", opts);
+    //println!("{:?}", opts);
 
     // * Read brain meshes for both hemis:
     //let lh_white = read_surf("resources/subjects_dir/subject1/surf/lh.white").unwrap();
@@ -69,11 +69,11 @@ fn main() {
 
     if opts.lh_vis_type != "none" {
         let lh_fd_type = FsDisplayable::from_str(&opts.lh_vis_type).expect("Invalid value for parameter 'lh_vis_type'.");
-        meshes.push(ColoredBrainMesh::from_freesurfer_type(&opts.basedir, &opts.lh_surf, &opts.lh_vis_file, lh_fd_type).unwrap());
+        meshes.push(ColoredBrainMesh::from_freesurfer_type_base(&opts.basedir, &opts.lh_surf, &opts.lh_vis_file, &lh_fd_type).unwrap());
     }
     if opts.rh_vis_type != "none" {
         let rh_fd_type = FsDisplayable::from_str(&opts.rh_vis_type).expect("Invalid value for parameter 'rh_vis_type'.");
-        meshes.push(ColoredBrainMesh::from_freesurfer_type(&opts.basedir, &opts.rh_surf, &opts.rh_vis_file, rh_fd_type).unwrap());
+        meshes.push(ColoredBrainMesh::from_freesurfer_type_base(&opts.basedir, &opts.rh_surf, &opts.rh_vis_file, &rh_fd_type).unwrap());
     }
 
    

@@ -6,11 +6,18 @@ use neuroformats::{BrainMesh, read_curv, read_surf, read_annot, read_label};
 use crate::{FsLabelDisplay, color_from_data, error::{Result, BrainviewError}};
 use crate::vertexcolor::VertexColor;
 
-/// Models a vertex-colored BrainMesh, typically for a single hemisphere.
+/// Models a vertex-colored BrainMesh for a single hemisphere.
 #[derive(Debug, Clone, PartialEq)]
 pub struct ColoredBrainMesh {
     pub mesh : BrainMesh,
     pub vertex_colors: Vec<u8>,
+}
+
+/// Models two vertex-colored BrainMeshes, one per hemisphere.
+#[derive(Debug, Clone, PartialEq)]
+pub struct ColoredBrain {
+    pub lh : ColoredBrainMesh,
+    pub rh : ColoredBrainMesh,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -133,13 +140,26 @@ impl ColoredBrainMesh {
     }
 
     /// Construct a ColoredBrainMesh from a label, annot or vurv file in a FreeSurfer directory. This typically represents a single hemisphere.
-    pub fn from_freesurfer_type(base_path : &str, surface_file : &str, vis_file: &str, vis_type: FsDisplayable) -> Result<ColoredBrainMesh> {
-        if vis_type == FsDisplayable::Annot {
+    pub fn from_freesurfer_type_base(base_path : &str, surface_file : &str, vis_file: &str, vis_type: &FsDisplayable) -> Result<ColoredBrainMesh> {
+        if *vis_type == FsDisplayable::Annot {
             ColoredBrainMesh::from_freesurfer_annot_base(base_path, surface_file, vis_file)
-        } else if vis_type == FsDisplayable::Curv {
+        } else if *vis_type == FsDisplayable::Curv {
             ColoredBrainMesh::from_freesurfer_curv_base(base_path, surface_file, vis_file)
-        } else if vis_type == FsDisplayable::Label {
+        } else if *vis_type == FsDisplayable::Label {
             ColoredBrainMesh::from_freesurfer_label_base(base_path, surface_file, vis_file)
+        } else {
+            panic!("Unsupported FsDisplayable");
+        }
+    }
+
+    /// Construct a ColoredBrainMesh from a label, annot or vurv file in a FreeSurfer directory. This typically represents a single hemisphere.
+    pub fn from_freesurfer_type(surface_file : &str, vis_file: &str, vis_type: &FsDisplayable) -> Result<ColoredBrainMesh> {
+        if *vis_type == FsDisplayable::Annot {
+            ColoredBrainMesh::from_freesurfer_annot(surface_file, vis_file)
+        } else if *vis_type == FsDisplayable::Curv {
+            ColoredBrainMesh::from_freesurfer_curv(surface_file, vis_file)
+        } else if *vis_type == FsDisplayable::Label {
+            ColoredBrainMesh::from_freesurfer_label(surface_file, vis_file)
         } else {
             panic!("Unsupported FsDisplayable");
         }
@@ -153,3 +173,33 @@ impl ColoredBrainMesh {
     
 }
 
+
+/// A simple wrapper struct around two ColoredBrainMesh instances, for both hemispheres of a brain.
+impl ColoredBrain {
+
+    /// Construct a ColoredBrain from a base path and surface and display type strings.
+    pub fn from_freesurfer_type_base(base_path : &str, surface_file_no_hemi : &str, vis_file_no_hemi: &str, vis_type: &FsDisplayable) -> Result<ColoredBrain> {
+        let lh_surface_file = &format!("lh.{}", surface_file_no_hemi);
+        let rh_surface_file = &format!("rh.{}", surface_file_no_hemi);
+        let lh_vis_file = &format!("lh.{}", vis_file_no_hemi);
+        let rh_vis_file = &format!("rh.{}", vis_file_no_hemi);
+        let lh = ColoredBrainMesh::from_freesurfer_type_base(base_path, lh_surface_file, lh_vis_file, vis_type).unwrap();
+        let rh = ColoredBrainMesh::from_freesurfer_type_base(base_path, rh_surface_file, rh_vis_file, vis_type).unwrap();
+        let cb = ColoredBrain { lh : lh, rh : rh };
+        Ok(cb)
+    }
+
+    /// Construct a ColoredBrain from absolute file paths for both hemis.
+    pub fn from_freesurfer_type(lh_surface_file : &str, rh_surface_file : &str, lh_vis_file: &str, rh_vis_file: &str, vis_type: &FsDisplayable) -> Result<ColoredBrain> {
+        let lh = ColoredBrainMesh::from_freesurfer_type(lh_surface_file, lh_vis_file, vis_type).unwrap();
+        let rh = ColoredBrainMesh::from_freesurfer_type(rh_surface_file, rh_vis_file, vis_type).unwrap();
+        let cb = ColoredBrain { lh : lh, rh : rh };
+        Ok(cb)
+    }
+
+    /// Returns a vector of owned (cloned) ColoredBrainMeshes from this ColoredBrain. The order is lh, rh.
+    pub fn to_vec(&self) -> Vec<ColoredBrainMesh> {
+        let v = vec![self.lh.clone(), self.rh.clone()];
+        v
+    }
+}
