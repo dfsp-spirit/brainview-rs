@@ -1,18 +1,25 @@
 
 
 //use neuroformats::{read_surf, read_curv};
-use libbrainview::{ColoredBrainMesh, FsDisplayable, scene, SceneSettings};
+use libbrainview::{ColoredBrainMesh, ColoredBrain, FsDisplayable, scene, SceneSettings};
 use structopt::StructOpt;
 
 
 
 // Try: cargo run -- --basedir resources/subjects_dir/subject1/ --right-vis-type label --right-vis rh.entorhinal_exvivo.label
+// Try: cargo run -- --basedir resources/subjects_dir/subject1/ --mode fs_short -e white -d thickness -c curv
 #[derive(Debug, StructOpt)]
 #[structopt(name = "brainviewer", about = "A simple viewer for surface-based neuroimaging data in FreeSurfer formats.")]
 struct Opt {
 
     #[structopt(short = "b", long = "basedir", default_value = ".", env = "FS_SUBJECT")]
     basedir: String,
+
+    // must be 'fs_base' or 'fs_short'
+    #[structopt(short = "m", long = "mode", default_value = "fs_base")]
+    mode: String,
+
+    // ===== Mode 'fs_base' =====
 
     /// Mesh file for left brain hemisphere. Ignored unless hemi is 'lh'.
     #[structopt(short = "q", long = "left-surf", default_value = "lh.white")]
@@ -33,6 +40,16 @@ struct Opt {
 
     #[structopt(short = "x", long = "right-vis", default_value = "rh.thickness")]
     rh_vis_file: String,
+
+    // ===== Mode 'fs_short' =====
+    #[structopt(short = "e", long = "surf_nh", default_value = "white")]
+    surf_nh: String,
+
+    #[structopt(short = "d", long = "vis_file_nh", default_value = "thickness")]
+    vis_nh: String,
+
+    #[structopt(short = "c", long = "vis-type", default_value = "curv")]
+    vis_type: String,
 }
 
 
@@ -66,15 +83,23 @@ fn main() {
     //let rh_cbmesh = ColoredBrainMesh::from_freesurfer_label("resources/subjects_dir/subject1", "rh.white", "rh.entorhinal_exvivo.label").unwrap();
 
     let mut meshes : Vec<ColoredBrainMesh> = Vec::new();
+    let lh_fd_type = FsDisplayable::from_str(&opts.lh_vis_type).expect("Invalid value for parameter 'lh_vis_type'.");
+    let rh_fd_type = FsDisplayable::from_str(&opts.rh_vis_type).expect("Invalid value for parameter 'rh_vis_type'.");
+    let fd_type = FsDisplayable::from_str(&opts.vis_type).expect("Invalid value for parameter 'vis_type'.");
 
-    if opts.lh_vis_type != "none" {
-        let lh_fd_type = FsDisplayable::from_str(&opts.lh_vis_type).expect("Invalid value for parameter 'lh_vis_type'.");
-        meshes.push(ColoredBrainMesh::from_freesurfer_type_base(&opts.basedir, &opts.lh_surf, &opts.lh_vis_file, &lh_fd_type).unwrap());
-    }
-    if opts.rh_vis_type != "none" {
-        let rh_fd_type = FsDisplayable::from_str(&opts.rh_vis_type).expect("Invalid value for parameter 'rh_vis_type'.");
-        meshes.push(ColoredBrainMesh::from_freesurfer_type_base(&opts.basedir, &opts.rh_surf, &opts.rh_vis_file, &rh_fd_type).unwrap());
-    }
+    if opts.mode == "fs_base" {
+
+        if opts.lh_vis_type != "none" {            
+            meshes.push(ColoredBrainMesh::from_freesurfer_type_base(&opts.basedir, &opts.lh_surf, &opts.lh_vis_file, &lh_fd_type).unwrap());
+        }
+        if opts.rh_vis_type != "none" {            
+            meshes.push(ColoredBrainMesh::from_freesurfer_type_base(&opts.basedir, &opts.rh_surf, &opts.rh_vis_file, &rh_fd_type).unwrap());
+        }
+    } else if opts.mode == "fs_short" {
+        let cb = ColoredBrain::from_freesurfer_type_base(&opts.basedir, &opts.surf_nh, &opts.vis_nh, &fd_type).expect("Failed to construct brain");
+        meshes.push(cb.lh);
+        meshes.push(cb.rh);
+    } 
 
    
 
